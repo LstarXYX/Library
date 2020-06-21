@@ -1,0 +1,36 @@
+[{
+    "name": "用户管理",
+    "icon": "&#xe612;",
+    "url": "",
+    "hidden": false,
+    "list": [{
+        "name": "用户列表",
+        "url": "admin.html"
+    },{
+        "name": "用户黑名单",
+        "url": "backuser_index.html"
+    }, {
+        "name": "添加用户",
+        "url": "user_add.html"
+    }]
+}, {
+    "name": "书籍管理",
+    "icon": "&#xe609;",
+    "url": "",
+    "hidden": false,
+    "list": [{
+        "name": "借书记录",
+        "url": "lend_index.html"
+    }, {
+        "name": "图书列表",
+        "url": "booklist_index.html"
+    },{
+        "name": "新书上架",
+        "url": "book_add.html"
+    }]
+},  {
+    "name": "退出登录",
+    "icon": "&#xe65c;",
+    "url": "login.html",
+    "list": []
+}]

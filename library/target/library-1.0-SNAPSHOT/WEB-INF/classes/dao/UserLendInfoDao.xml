@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.UserLendInfoDao">
+
+    <resultMap type="entity.UserLendInfo" id="UserLendInfoMap">
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="lendDay" column="lend_day" jdbcType="DATE"/>
+        <result property="returnDay" column="return_day" jdbcType="DATE"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="lendBookName" column="lend_book_name" jdbcType="VARCHAR"/>
+        <result property="isbn" column="ISBN" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询用户借书信息-->
+    <select id="queryById" resultMap="UserLendInfoMap">
+        select
+          user_id, lend_day, return_day, status, lend_book_name, ISBN
+        from library.user_lend_info
+        where user_id = #{userId}
+    </select>
+
+    <select id="queryByIdorISBN" resultMap="UserLendInfoMap">
+        select
+            user_id, lend_day, return_day, status, lend_book_name, ISBN
+        from library.user_lend_info
+        <where>
+            <if test=" userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="isbn != null ">
+                and ISBN = #{isbn}
+            </if>
+        </where>
+
+    </select>
+
+<!--    查询单个-->
+    <select id="selectOne" resultMap="UserLendInfoMap">
+        select
+            user_id, lend_day, return_day, status, lend_book_name, ISBN
+        from library.user_lend_info
+        where user_id = #{userId} and ISBN = #{isbn} and status = '借出'
+    </select>
+
+
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserLendInfoMap">
+        select
+          user_id, lend_day, return_day, status, lend_book_name, ISBN
+        from library.user_lend_info
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="UserLendInfoMap">
+        select
+          user_id, lend_day, return_day, status, lend_book_name, ISBN
+        from library.user_lend_info
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="lendDay != null">
+                and lend_day = #{lendDay}
+            </if>
+            <if test="returnDay != null">
+                and return_day = #{returnDay}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="lendBookName != null and lendBookName != ''">
+                and lend_book_name = #{lendBookName}
+            </if>
+            <if test="isbn != null">
+                and ISBN = #{isbn}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into library.user_lend_info(user_id, lend_day, return_day, status, lend_book_name, ISBN)
+        values (#{userId}, #{lendDay}, #{returnDay}, #{status}, #{lendBookName}, #{isbn})
+    </insert>
+
+    <!--通过主键和isbn修改数据-->
+    <update id="update">
+        update library.user_lend_info
+        <set>
+            <if test="returnDay != null">
+                return_day = #{returnDay},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+        </set>
+        where  user_id= #{userId} and ISBN = #{isbn}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from library.user_lend_info where user_id  = #{userId}
+    </delete>
+
+</mapper>

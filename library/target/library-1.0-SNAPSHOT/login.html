@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>管理员登陆</title>
+    <link rel="stylesheet" href="./static/common/layui/css/layui.css">
+    <link rel="stylesheet" href="./static/admin/css/login.css">
+    <script src="./static/common/layui/layui.js"></script>
+</head>
+
+<body id="login">
+    <div class="login">
+        <h2>管理员入口</h2>
+        <form class="layui-form" method="post" target="_blank" action="">
+            <div class="layui-form-item">
+                <input type="username" name="user" id="user" placeholder="管理员账号" class="layui-input">
+                <i class="layui-icon input-icon">&#xe66f;</i>
+            </div>
+            <div class="layui-form-item">
+                <input type="password" name="pwd" id="pwd" placeholder="密码" class="layui-input">
+                <i class="layui-icon input-icon">&#xe673;</i>
+            </div>
+            <div class="layui-form-item">
+                <input type="checkbox" name="box" lay-skin="primary" title="记住密码" checked="">
+                <!-- <a class="back" href="javascript:;"  style="margin-top: 10px">忘记密码</a> -->
+            </div>
+            <div class="layui-form-item">
+                <button style="width: 100%" class="layui-btn" lay-submit lay-filter="login">立即登录</button>
+
+            </div>
+        </form>
+
+        <script>
+           
+            layui.use('form', function () {
+                var form = layui.form,
+                    layer = layui.layer,
+                    $ = layui.jquery;
+                form.on('submit(login)', function (data) {
+                    var user = document.getElementById("user").value;
+                    var pwd = document.getElementById("pwd").value;
+                    var ty = new XMLHttpRequest();
+                    var url = "admin/login?adminId=" + user + "&adminPassword=" + pwd;
+                    ty.open("GET", url, true);
+                    ty.setRequestHeader('Content-Type', ' application/x-www-form-urlencoded');
+                    ty.send();
+                    ty.onreadystatechange = function () {
+                        if (ty.readyState == 4 && ty.status == 200) {
+                            var rtext = ty.responseText;
+                            var json_text = JSON.parse(rtext);
+
+                            if (json_text.status == 200) {
+
+                                sessionStorage.isLgoin = 1; //模拟登录状态,
+
+                                layer.load({
+                                    shade: 0.5,
+                                    time: 0,
+                                });
+                                setTimeout(function () {
+                                    window.location.href = 'admin.html';
+                                }, 500)
+                            }
+                            else {
+                                layer.tips('密码错误!', '.layui-btn', {
+                                    tips: [3, '#333'],
+                                    time: 0
+                                });
+                            }
+                        }
+
+                    }
+                    return false;
+                });
+            });
+        </script>
+    </div>
+</body>
+
+</html>

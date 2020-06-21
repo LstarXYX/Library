@@ -26,4 +26,8 @@ public class hibernateUtil {
         //只有配置了线程和session绑定才能用
     }
 
+    public static void main(String[] args) {
+        Session s = getCurrentSession();
+    }
+
 }

@@ -1134,140 +1134,210 @@
     <table id="286" parent="9" name="linkman"/>
     <table id="287" parent="9" name="product"/>
     <table id="288" parent="9" name="product_"/>
-    <column id="289" parent="285" name="cust_id">
+    <table id="289" parent="9" name="sys_role">
+      <Engine>MyISAM</Engine>
+    </table>
+    <table id="290" parent="9" name="sys_user">
+      <Engine>MyISAM</Engine>
+    </table>
+    <column id="291" parent="285" name="cust_id">
       <Position>1</Position>
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="290" parent="285" name="cust_name">
+    <column id="292" parent="285" name="cust_name">
       <Position>2</Position>
       <DataType>varchar(32)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="291" parent="285" name="cust_source">
+    <column id="293" parent="285" name="cust_source">
       <Position>3</Position>
       <DataType>varchar(32)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="292" parent="285" name="cust_industry">
+    <column id="294" parent="285" name="cust_industry">
       <Position>4</Position>
       <DataType>varchar(32)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="293" parent="285" name="cust_level">
+    <column id="295" parent="285" name="cust_level">
       <Position>5</Position>
       <DataType>varchar(32)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="294" parent="285" name="cust_address">
+    <column id="296" parent="285" name="cust_address">
       <Position>6</Position>
       <DataType>varchar(128)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="295" parent="285" name="cust_phone">
+    <column id="297" parent="285" name="cust_phone">
       <Position>7</Position>
       <DataType>varchar(64)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="296" parent="285" name="PRIMARY">
+    <key id="298" parent="285" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>cust_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="297" parent="286" name="lkm_id">
+    <column id="299" parent="286" name="lkm_id">
       <Position>1</Position>
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="298" parent="286" name="lkm_name">
+    <column id="300" parent="286" name="lkm_name">
       <Position>2</Position>
       <DataType>char(16)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="299" parent="286" name="lkm_gender">
+    <column id="301" parent="286" name="lkm_gender">
       <Position>3</Position>
       <DataType>char(1)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="300" parent="286" name="lkm_phone">
+    <column id="302" parent="286" name="lkm_phone">
       <Position>4</Position>
       <DataType>varchar(16)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="301" parent="286" name="lkm_mobile">
+    <column id="303" parent="286" name="lkm_mobile">
       <Position>5</Position>
       <DataType>varchar(16)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="302" parent="286" name="lkm_email">
+    <column id="304" parent="286" name="lkm_email">
       <Position>6</Position>
       <DataType>varchar(64)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="303" parent="286" name="lkm_memo">
+    <column id="305" parent="286" name="lkm_memo">
       <Position>7</Position>
       <DataType>varchar(512)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="304" parent="286" name="PRIMARY">
+    <column id="306" parent="286" name="lkm_cust_ID">
+      <Position>8</Position>
+      <DataType>bigint|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="307" parent="286" name="FKgon5xt19tmfv28o4dif3uv4e">
+      <ColNames>lkm_cust_ID</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="308" parent="286" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>lkm_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="305" parent="287" name="id">
+    <foreign-key id="309" parent="286" name="FKgon5xt19tmfv28o4dif3uv4e">
+      <ColNames>lkm_cust_ID</ColNames>
+      <RefSchemaName>studyhibernate</RefSchemaName>
+      <RefTableName>customer</RefTableName>
+      <RefColNames>cust_id</RefColNames>
+    </foreign-key>
+    <column id="310" parent="287" name="id">
       <Position>1</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="306" parent="287" name="name">
+    <column id="311" parent="287" name="name">
       <Position>2</Position>
       <DataType>varchar(30)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="307" parent="287" name="price">
+    <column id="312" parent="287" name="price">
       <Position>3</Position>
       <DataType>double|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="308" parent="287" name="PRIMARY">
+    <key id="313" parent="287" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="309" parent="288" name="id">
+    <column id="314" parent="288" name="id">
       <Position>1</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="310" parent="288" name="name">
+    <column id="315" parent="288" name="name">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="311" parent="288" name="price">
+    <column id="316" parent="288" name="price">
       <Position>3</Position>
       <DataType>double|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="312" parent="288" name="cid">
+    <column id="317" parent="288" name="cid">
       <Position>4</Position>
       <DataType>int|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="313" parent="288" name="PRIMARY">
+    <key id="318" parent="288" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="319" parent="289" name="role_id">
+      <Position>1</Position>
+      <DataType>bigint|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="320" parent="289" name="role_name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="321" parent="289" name="role_memo">
+      <Position>3</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <key id="322" parent="289" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>role_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="323" parent="290" name="user_id">
+      <Position>1</Position>
+      <DataType>bigint|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="324" parent="290" name="user_name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="325" parent="290" name="user_password">
+      <Position>3</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="326" parent="290" name="user_state">
+      <Position>4</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <key id="327" parent="290" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>user_id</ColNames>
       <Primary>1</Primary>
     </key>
   </database-model>

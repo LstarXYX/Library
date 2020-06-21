@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.BookDao">
+
+    <resultMap type="entity.Book" id="BookMap">
+        <result property="isbn" column="ISBN" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="author" column="author" jdbcType="VARCHAR"/>
+        <result property="publishDate" column="publish_date" jdbcType="DATE"/>
+        <result property="categoryId" column="category_id" jdbcType="INTEGER"/>
+        <result property="price" column="price" jdbcType="FLOAT"/>
+        <result property="themeWord" column="theme_word" jdbcType="VARCHAR"/>
+        <result property="keyWord" column="key_word" jdbcType="VARCHAR"/>
+        <result property="bookNum" column="book_num" jdbcType="INTEGER"/>
+        <result property="imagePath" column="image_path" jdbcType="VARCHAR"/>
+        <association property="category" javaType="Category">
+            <id property="categoryId" column="categoryId"/>
+            <result property="categoryName" column="category_name"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="BookInfoMap" type="vo.BookInfo">
+        <result property="isbn" column="ISBN" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="author" column="author" jdbcType="VARCHAR"/>
+        <result property="publishDate" column="publish_date" jdbcType="DATE"/>
+        <result property="categoryId" column="category_id" jdbcType="INTEGER"/>
+        <result property="price" column="price" jdbcType="FLOAT"/>
+        <result property="themeWord" column="theme_word" jdbcType="VARCHAR"/>
+        <result property="keyWord" column="key_word" jdbcType="VARCHAR"/>
+        <result property="bookNum" column="book_num" jdbcType="INTEGER"/>
+        <result property="imagePath" column="image_path" jdbcType="VARCHAR"/>
+        <result property="categoryName" column="category_Name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BookMap">
+        select ISBN,
+               title,
+               author,
+               publish_date,
+               book.category_id,
+               price,
+               theme_word,
+               key_word,
+               book_num,
+               image_path,
+               category_name
+        from library.book,category
+        where book.category_id = category.category_id and ISBN = #{isbn}
+    </select>
+
+
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BookMap">
+        select ISBN,
+               title,
+               author,
+               publish_date,
+               category_id,
+               price,
+               theme_word,
+               key_word,
+               book_num,
+               image_path
+        from library.book
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+   <!-- <select id="queryAll" resultMap="BookMap">
+        select
+        ISBN, title, author, publish_date, book.category_id, price, theme_word, key_word, book_num,
+        image_path,category.category_name
+        from library.book left join category on book.category_id = category.category_id
+        <where>
+            <if test="isbn != null">
+                and ISBN = #{isbn}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="author != null and author != ''">
+                and author = #{author}
+            </if>
+            <if test="publishDate != null">
+                and publish_date = #{publishDate}
+            </if>
+            <if test="categoryId != null">
+                and book.category_id = #{categoryId}
+            </if>
+            <if test="themeWord != null and themeWord != ''">
+                and theme_word like concat('%',#{themeWord},'%')
+            </if>
+            <if test="keyWord != null and keyWord != ''">
+                and key_word like concat('%',#{keyWord},'%')
+            </if>
+            <if test="bookNum != null">
+                and book_num = #{bookNum}
+            </if>
+            <if test="imagePath != null and imagePath != ''">
+                and image_path = #{imagePath}
+            </if>
+            <if test="category != null">
+                <if test="category.categoryName != null and category.categoryName != ''">
+                    and category.category_name like concat('%',#{category.categoryName},'%')
+                </if>
+            </if>
+
+        </where>
+    </select>-->
+
+
+    <select id="queryAll" resultMap="BookInfoMap">
+        select
+       book.ISBN, book.title, book.author, book.publish_date, book.category_id, book.price, book.theme_word, book.key_word, book.book_num,
+        book.image_path,category.category_name
+        from library.book left join category on book.category_id = category.category_id
+        <where>
+            <if test="isbn != null">
+                and ISBN = #{isbn}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="author != null and author != ''">
+                and author = #{author}
+            </if>
+            <if test="publishDate != null">
+                and publish_date = #{publishDate}
+            </if>
+            <if test="categoryId != null">
+                and book.category_id = #{categoryId}
+            </if>
+            <if test="themeWord != null and themeWord != ''">
+                and theme_word like concat('%',#{themeWord},'%')
+            </if>
+            <if test="keyWord != null and keyWord != ''">
+                and key_word like concat('%',#{keyWord},'%')
+            </if>
+            <if test="bookNum != null">
+                and book_num = #{bookNum}
+            </if>
+            <if test="imagePath != null and imagePath != ''">
+                and image_path = #{imagePath}
+            </if>
+            <if test="categoryName != null and categoryName != ''">
+                 and category.category_name like concat('%',#{categoryName},'%')
+            </if>
+
+        </where>
+    </select>
+
+
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="isbn" useGeneratedKeys="true">
+        insert into library.book(title, author, publish_date, category_id, price, theme_word, key_word, book_num,
+                                 image_path)
+        values (#{title}, #{author}, #{publishDate}, #{categoryId}, #{price}, #{themeWord}, #{keyWord}, #{bookNum},
+                #{imagePath})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update library.book
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="author != null and author != ''">
+                author = #{author},
+            </if>
+            <if test="publishDate != null">
+                publish_date = #{publishDate},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="themeWord != null and themeWord != ''">
+                theme_word = #{themeWord},
+            </if>
+            <if test="keyWord != null and keyWord != ''">
+                key_word = #{keyWord},
+            </if>
+            <if test="bookNum != null">
+                book_num = #{bookNum},
+            </if>
+            <if test="imagePath != null and imagePath != ''">
+                image_path = #{imagePath},
+            </if>
+        </set>
+        where ISBN = #{isbn}
+    </update>
+
+    <!--通过主键删除-->
+    <update id="deleteById">
+        update
+        library.book set book_num = 0
+        where ISBN = #{isbn}
+    </update>
+
+</mapper>

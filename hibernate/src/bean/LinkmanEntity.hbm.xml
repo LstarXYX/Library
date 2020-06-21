@@ -22,7 +22,9 @@
                         class: 指定属性所对应的实体类名称
                         colum：指定从表中外键字段的名称
         -->
-    <many-to-one name="customer" class="bean.CustomerEntity" column="lkm_cust_ID"></many-to-one>
+        <many-to-one name="customer" class="bean.CustomerEntity" column="lkm_cust_ID" lazy="false">
+
+    </many-to-one>
 
     </class>
 </hibernate-mapping>

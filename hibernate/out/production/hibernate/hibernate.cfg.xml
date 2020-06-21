@@ -19,6 +19,10 @@
       <mapping resource="bean/CustomerEntity.hbm.xml"/>
       <mapping resource="bean/LinkmanEntity.hbm.xml"/>
       <mapping class="bean.LinkmanEntity"/>
+      <mapping class="bean.SysUserEntity"/>
+      <mapping resource="bean/SysUserEntity.hbm.xml"/>
+      <mapping class="bean.SysRoleEntity"/>
+      <mapping resource="bean/SysRoleEntity.hbm.xml"/>
 
       <!-- DB schema will be updated if needed -->
 

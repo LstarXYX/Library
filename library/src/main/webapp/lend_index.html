@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>栏目管理 - QAdmin后台模板</title>
+    <link rel="stylesheet" href="./static/common/layui/css/layui.css">
+    <link rel="stylesheet" href="./static/admin/css/style.css">
+    <script src="./static/common/jquery-3.3.1.min.js"></script>
+    <script src="./static/common/layui/layui.js"></script>
+    <script src="./static/common/vue.min.js"></script>
+</head>
+<style>
+    /*分页*/
+    .pagecent {
+        margin: auto;
+    }
+
+    .page-bar {
+        float: right;
+        margin: 40px 100px;
+        text-align: center;
+
+    }
+
+    ul,
+    li {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    li {
+        list-style: none
+    }
+
+    .page-bar li:first-child>a {
+        margin-left: 0px
+    }
+
+    .page-bar a {
+        border: 1px solid #ddd;
+        text-decoration: none;
+        position: relative;
+        float: left;
+        padding: 6px 12px;
+        margin-left: -1px;
+        line-height: 1.42857143;
+        color: #5D6062;
+        cursor: pointer;
+        margin-right: 20px;
+    }
+
+    .page-bar a:hover {
+        background-color: #eee;
+    }
+
+    .page-bar a.banclick {
+        cursor: not-allowed;
+    }
+
+    .page-bar .active a {
+        color: #fff;
+        cursor: default;
+        background-color: #E96463;
+        border-color: #E96463;
+    }
+
+    .page-bar i {
+        font-style: normal;
+        color: #d44950;
+        margin: 0px 4px;
+        font-size: 12px;
+    }
+
+    #book_name {
+
+        height: 100px;
+        width: 100%;
+        overflow: hidden
+    }
+
+    td {
+        text-align: center;
+    }
+
+    .layui-table th {
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <!--顶栏-->
+        <header>
+            <h1 v-text="webname"></h1>
+            <div class="breadcrumb">
+                <i class="layui-icon"></i>
+                <ul>
+                    <li v-for="vo in address">
+                        <a v-text="vo.name" :href="vo.url"></a> <span>/</span>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <div class="main">
+            <!--左栏-->
+            <div class="left">
+                <ul class="cl">
+                    <!--顶级分类-->
+                    <li v-for="vo,index in menu" :class="{hidden:vo.hidden}">
+                        <a href="javascript:;" :class="{active:vo.active}" @click="onActive(index)">
+                            <i class="layui-icon" v-html="vo.icon"></i>
+                            <span v-text="vo.name"></span>
+                            <i class="layui-icon arrow" v-show="vo.url.length==0">&#xe61a;</i> <i v-show="vo.active"
+                                class="layui-icon active">&#xe623;</i>
+                        </a>
+                        <!--子级分类-->
+                        <div v-for="vo2,index2 in vo.list">
+                            <a href="javascript:;" :class="{active:vo2.active}" @click="onActive(index,index2)"
+                                v-text="vo2.name"></a>
+                            <i v-show="vo2.active" class="layui-icon active">&#xe623;</i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!--右侧-->
+            <div class="right">
+
+
+                <div style="margin: 20px;height: 50px;">
+                    <button type="button" class="layui-btn sou" style="float: right; " v-on:click="getlen">搜索</button>
+                    <div class="layui-form layui-input-block" style="width: 150px;float: right;margin:0px; ">
+                        <select  id="slect_name">
+                            <option value="isbn" selected>ISBN号</option>
+                            <option value="userId"> 用户id</option>                           
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" style="width: 200px;float: right; ">
+                        <input type="text" id="s_id" value="" placeholder="搜索内容" class="layui-input key">
+                    </div>
+                </div>
+
+                <table class="layui-table layui-form">
+                    <colgroup>
+                        <col width="40">
+                        <col width="90">
+                        <col width="90">
+                        <col width="150">
+                        <col width="90">
+                        <col width="90">
+                        <col width="90">
+                        <col width="90">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>用户id</th>
+                            <th>图书编号</th>
+                            <th>书名</th>
+                            <th>借出日期</th>
+                            <th>归还日期</th>
+                            <th>当前状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(list,index) in lendlist.slice(list_be,list_end)">
+                            <td>{{index+list_be+1}}</td>
+                            <td>{{list.userId}}</td>
+                            <td>{{list.isbn}}</td>
+                            <td>
+                                <div id="book_name">{{list.lendBookName}}</div>
+                            </td>
+                            <td>{{list.lendDay}}</td>
+                            <td>{{list.returnDay}}</td>
+                            <td v-if="list.status=='借出'"><a class="layui-btn layui-btn-warm">{{list.status}}</a> </td>
+                            <td v-else-if="list.status=='超期'"><a class="layui-btn layui-btn-danger">{{list.status}}</a>
+                            </td>
+                            <td v-else-if="list.status=='丢失'"><a class="layui-btn layui-btn-danger">{{list.status}}</a>
+                            </td>
+                            <td v-else-if="list.status=='损坏'"> <a class="layui-btn layui-btn-danger">{{list.status}}</a>
+                            </td>
+                            <td v-else><a class="layui-btn">{{list.status}}</a> </td>
+                            <td><a class="layui-btn  layui-btn-normal" v-on:click="relend(index)">修改</a> </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <ul class="page page-bar">
+                        <li v-if="cur>1"><a v-on:click="cur--,pageClick()">上一页</a></li>
+                        <li v-if="cur==1"><a class="banclick">上一页</a></li>
+                        <li v-for="index in indexs" v-bind:class="{ 'active': cur == index}">
+                            <a v-on:click="btnClick(index)">{{ index }}</a>
+                        </li>
+                        <li v-if="cur!=all"><a v-on:click="cur++,pageClick()">下一页</a></li>
+                        <li v-if="cur == all"><a class="banclick">下一页</a></li>
+                        <li><a>共<i>{{all}}</i>页</a></li>
+                    </ul>
+                </div>
+                <div style="height: 0px; overflow: hidden;">
+                    <form class="layui-form " id="tkid">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">用户编号：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="userId" id="userId" placeholder="" v-model="thisbook.userId"
+                                    required lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">ISBN</label>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <input type="text" name="isbn" id="isbn" placeholder="" autocomplete="off"
+                                    v-model="thisbook.isbn" required lay-verify="required" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">归还日期</label>
+                            <div class="layui-input-inline" style="width: 150px">
+                                <input type="date" name="returnDay" v-model="thisbook.returnDay" class="layui-input">
+
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">分类</label>
+                            <div class="layui-input-inline" style="width: 200px">
+                                <select name="status">
+                                    <option value="借出" selected>请选择：</option>
+                                    <option value="借出">借出</option>
+                                    <option value="超期">超期</option>
+                                    <option value="丢失">丢失</option>
+                                    <option value="损坏">损坏</option>
+                                    <option value="归还">归还</option>
+                                </select>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label"></label>
+                                <div class="layui-input-inline" style="width: 200px;">
+                                    <input type="button" class="layui-btn" value="立即提交" v-on:click="retkl()">
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            if (!sessionStorage.isLgoin) {
+                window.location.href = 'login.html';
+            }
+        </script>
+        <script src="./static/admin/js/config.js"></script>
+        <script src="./static/admin/js/script.js"></script>
+</body>
+
+</html>

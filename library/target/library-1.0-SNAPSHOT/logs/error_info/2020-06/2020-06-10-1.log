@@ -1,0 +1,1 @@
+2020-06-10 19:04:28.584 INFO [RMI TCP Connection(3)-127.0.0.1][Log4j2Impl.java:106] - {dataSource-1} inited2020-06-10 19:06:25.456 INFO [main][Log4j2Impl.java:106] - {dataSource-1} closing ...2020-06-10 19:06:25.473 INFO [main][Log4j2Impl.java:106] - {dataSource-1} closed

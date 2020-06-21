@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.BlacklistDao">
+
+    <resultMap type="entity.Blacklist" id="BlacklistMap">
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="date" column="date" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BlacklistMap">
+        select
+          user_id, user_name,date
+        from library.blacklist
+        where user_id = #{userid} limit 1
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BlacklistMap">
+        select
+          user_id, user_name,date
+        from library.blacklist
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BlacklistMap">
+        select
+          user_id, user_name,date
+        from library.blacklist
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into library.blacklist(user_id, user_name,date)
+        values (#{userId}, #{userName},#{date})
+    </insert>
+
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from library.blacklist where user_id = #{userid}
+    </delete>
+
+</mapper>

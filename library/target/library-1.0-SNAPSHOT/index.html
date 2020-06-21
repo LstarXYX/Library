@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>图书管理系统</title>
+    <link rel="stylesheet" href="./static/common/layui/css/layui.css">
+    <link rel="stylesheet" href="./static/admin/css/style.css">
+
+    <script src="./static/common/layui/layui.js"></script>
+    <script src="./static/common/jquery-3.3.1.min.js"></script>
+    <script src="./static/common/vue.min.js"></script>
+    <style>
+        body {
+            background-color: rgb(250, 250, 248);
+        }
+
+        .main {
+            width: 90%;
+            margin: auto;
+        }
+
+        .list_book {
+            background-color: rgba(255, 255, 255, 0.699);
+            height: 200px;
+        }
+
+        .list_book img {
+            width: 100%;
+        }
+
+        .list_book li {
+            float: left;
+            margin: 6px;
+            background-color: rgb(247, 247, 247);
+            width: 125px;
+            height: 200px;
+            overflow: hidden;
+        }
+
+
+
+        /*分页*/
+        .pagecent {
+            margin: auto;
+        }
+
+        .page-bar {
+            float: right;
+            margin: 40px 100px;
+            text-align: center;
+
+        }
+
+        ul,
+        li {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        li {
+            list-style: none
+        }
+
+        .page-bar li:first-child>a {
+            margin-left: 0px
+        }
+
+        .page-bar a {
+            border: 1px solid #ddd;
+            text-decoration: none;
+            position: relative;
+            float: left;
+            padding: 6px 12px;
+            margin-left: -1px;
+            line-height: 1.42857143;
+            color: #5D6062;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        .page-bar a:hover {
+            background-color: #eee;
+        }
+
+        .page-bar a.banclick {
+            cursor: not-allowed;
+        }
+
+        .page-bar .active a {
+            color: #fff;
+            cursor: default;
+            background-color: #E96463;
+            border-color: #E96463;
+        }
+
+        .page-bar i {
+            font-style: normal;
+            color: #d44950;
+            margin: 0px 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">s
+        <!--顶栏-->
+        <header>
+            <ul class="layui-nav" lay-filter="">
+                <li class="layui-nav-item" style="margin-left: 50px;"><a href="index.html"><img src="images/1.png" height="50PX" alt=""></a></li>
+
+                <li class="layui-nav-item" >
+                    <a >规章制度</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="readersguide.html">入馆须知</a></dd>
+                        <dd><a href="rules.html" >借阅须知</a></dd>
+                        <dd><a href="rulessecurity.html" >安全须知</a></dd>
+                    </dl>
+                </li>
+
+                <li class="layui-nav-item" style="float: right;" v-if="islogin()">
+                    <a ><img src="//t.cn/RCzsdCq" class="layui-nav-img">个人中心</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">剩余可借：<span
+                                    class="layui-badge">{{ sessionStorage.allowLendNum}}</span></a></dd>
+                        <dd><a href="javascript:;" v-on:click="lend_list">借书记录</a></dd>
+                        <dd><a href="javascript:;" v-on:click="outting">退出</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item" style="float: right;" v-else>
+                    <a v-on:click="login">请登录</a>
+                </li>
+
+
+                <li class="" style="float: right;margin-right: 30px;">
+                    <div style="text-align: left">
+                        <button type="button" class="layui-btn layui-btn-normal sou"
+                            style="float: right;margin-top: 10px;" v-on:click="getbook">搜索</button>
+                        <div class="layui-form layui-input-block"
+                            style=" margin-left: -1px; width: 100px;float: right;margin-top: 10px; color:rgb(36, 32, 32);">
+                            <select lay-filter="aihao" id="slect_name" style="background-color: red;">
+                                <option value="isbn"> ISBN号</option>
+                                <option value="title"> 书名</option>
+                                <option value="author"> 作者</option>
+                                <option value="themeWord"> 主题词</option>
+                                <option value="keyWord"> 关键词</option>
+                                <option value="categoryName"> 分类名</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline" style="float: right;margin-top: 10px;width: 300px;">
+                            <input type="text" id="s_id" value="" placeholder="请输入" class="layui-input key">
+
+                        </div>
+
+                    </div>
+                </li>
+
+            </ul>
+        </header>
+
+        <div class="main " id="app">
+            <!-- 轮播 -->
+            <div class="layui-carousel" id="test1" style="padding-top: 70px">
+                <div carousel-item>
+                    <div><img src="images/0.png" style="width: 100%;"></div>
+
+                    <div><img src="images/13.png" style="width: 100%;"></div>
+                    <div><img src="images/14.png" style="width: 100%;"></div>
+
+                </div>
+            </div>
+
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>图书列表</legend>
+            </fieldset>
+            <!-- 列表 -->
+            <div>
+                <ul class="list_book">
+
+                    <li v-for="(list,index) in booklist.slice(list_be,list_end)">
+                        <div v-on:click="rebook(index)">
+                            <img v-bind:src="list.imagePath" />
+                            <span>{{list.title}}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- 分页 -->
+            <footer>
+                <ul class="page page-bar">
+                    <li v-if="cur>1"><a v-on:click="cur--,pageClick()">上一页</a></li>
+                    <li v-if="cur==1"><a class="banclick">上一页</a></li>
+                    <li v-for="index in indexs" v-bind:class="{ 'active': cur == index}">
+                        <a v-on:click="btnClick(index)">{{ index }}</a>
+                    </li>
+                    <li v-if="cur!=all"><a v-on:click="cur++,pageClick()">下一页</a></li>
+                    <li v-if="cur == all"><a class="banclick">下一页</a></li>
+                    <li><a>共<i>{{all}}</i>页</a></li>
+                </ul>
+            </footer>
+
+            <!-- 借书弹框 -->
+            <div style="height: 0px; overflow: hidden;">
+                <div class="layui-form " id="id">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">ISBN :</label>
+                        <div class="layui-input-inline">
+                            <p style="color: red; margin-top: 12px;">{{thisbook.isbn}}</p>
+                            <input type="hidden" name="isbn" id="isbn" placeholder="" v-model="thisbook.isbn"
+                                class="layui-input">
+                        </div>
+                    </div>
+
+
+
+                    <div class="layui-form-item">
+                        <label for="file">
+                            <p class="layui-form-label" style="margin-top: 25px;">图片 :</p>
+                            <img class="pic_url" id="img1" v-bind:src="thisbook.imagePath" height="100px" />
+
+                        </label>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">书名 :</label>
+                        <div class="layui-input-inline">
+                            <p style=" margin-top: 12px;">{{thisbook.title}}</p>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">作者 :</label>
+                        <div class="layui-input-inline">
+                            <p style=" margin-top: 12px;">{{thisbook.author}}</p>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">主题词 :</label>
+                        <div class="layui-input-inline">
+                            <p style=" margin-top: 12px;">{{thisbook.themeWord}}</p>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">关键字 :</label>
+                        <div class="layui-input-inline">
+                            <p style=" margin-top: 12px;">{{thisbook.keyWord}}</p>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">剩余数量 :</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <p style=" margin-top: 12px;">{{thisbook.bookNum}}</p>
+
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">出版日期 :</label>
+                        <div class="layui-input-inline" style="width: 150px">
+                            <p style=" margin-top: 12px;">{{thisbook.publishDate}}</p>
+
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">定价 :</label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <p style=" margin-top: 12px;">{{thisbook.price}}</p>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"></label>
+                        <div class="layui-input-inline" style="width: 200px;">
+
+                            <input type="button" class="layui-btn" value="申请借阅" v-on:click="reb(thisbook.isbn)" v-if="thisbook.bookNum>0">
+
+                            <input type="button" class="layui-btn layui-btn-danger" value="暂时无法借阅"  v-else >
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 登陆 弹框-->
+            <div style="height: 0px; overflow: hidden;">
+                <div class="layui-form " id="box">
+
+
+                    <div class="layui-form-item" style="margin-top: 30px;">
+                        <label class="layui-form-label">账号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="user" id="user" placeholder="" required lay-verify="required"
+                                autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="psw" id="psw" placeholder="" required lay-verify="required"
+                                autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"></label>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="button" class="layui-btn" value="登录" v-on:click="take_login()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 记录弹窗 -->
+
+            <div style="height: 0px; overflow: hidden;">
+                <table class="layui-table layui-form" id="book" >
+                    <colgroup>
+                        <col width="40">
+                       
+                        <col width="90">
+                        <col width="150">
+                        <col width="90">
+                        <col width="90">
+                        <col width="90">
+                      
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                           
+                            <th>图书编号</th>
+                            <th>书名</th>
+                            <th>借出日期</th>
+                            <th>归还日期</th>
+                            <th>当前状态</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(list,index) in lendlist.slice(list_be,list_end)">
+                            <td>{{index+list_be+1}}</td>
+                           
+                            <td>{{list.isbn}}</td>
+                            <td>
+                                <div id="book_name">{{list.lendBookName}}</div>
+                            </td>
+                            <td>{{list.lendDay}}</td>
+                            <td>{{list.returnDay}}</td>
+                            <td v-if="list.status=='借出'"><a class="layui-btn layui-btn-warm">{{list.status}}</a> </td>
+                            <td v-else-if="list.status=='超期'"><a class="layui-btn layui-btn-danger">{{list.status}}</a>
+                            </td>
+                            <td v-else-if="list.status=='丢失'"><a class="layui-btn layui-btn-danger">{{list.status}}</a>
+                            </td>
+                            <td v-else-if="list.status=='损坏'"> <a class="layui-btn layui-btn-danger">{{list.status}}</a>
+                            </td>
+                            <td v-else><a class="layui-btn">{{list.status}}</a> </td>
+                           
+                        </tr>
+                    </tbody>
+
+
+
+
+
+                </table>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <script src="./static/admin/js/script-user.js"></script>
+    <script type="text/javascript">
+
+
+        //注意：导航 依赖 element 模块，否则无法进行功能性操作
+        layui.use('element', function () {
+            var element = layui.element;
+
+            //…
+        });
+        layui.use('carousel', function () {
+            var carousel = layui.carousel;
+            //建造实例
+            carousel.render({
+                elem: '#test1'
+                , width: '100%' //设置容器宽度
+                // ,arrow: 'always' //始终显示箭头
+                //,anim: 'updown' //切换动画方式
+            });
+        });
+    </script>
+
+</body>
+
+</html>
